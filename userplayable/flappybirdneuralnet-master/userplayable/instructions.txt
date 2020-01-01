@@ -1,0 +1,7 @@
+This is the version of the game which does not include the neural network so a human can play it
+
+
+things to add:
+- score
+- make it look better
+- die on pipe touch - or at the bottom

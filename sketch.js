@@ -5,6 +5,16 @@ var pipes = [];
 let counter = 0;
 let cycles = 1;
 let slider;
+
+function keyPressed() {
+    if (key === 'S') {
+        let bird = birds[0];
+        let json = bird.brain.serialize();
+        saveJSON(bird.brain,'bird.json');
+        console.log(json);
+    }
+
+}
 function setup() {
     createCanvas(400, 600);
     slider = createSlider(1,100,1);
@@ -32,6 +42,14 @@ function draw() {
         if (pipes[i].offscreen()) {
             pipes.splice(i,1);
         }
+
+        for (let i = birds.length-1; i>=0; i--) {
+            if (birds[i].offScreen()) {
+                savedBirds.push(birds.splice(i,1)[0]);
+            }
+        }
+
+
         }
         for (let bird of birds) {
             bird.think(pipes);
@@ -55,10 +73,10 @@ function draw() {
     }
 }
 
-function keyPressed() {
-    if (key == ' ') {
-        // console.log("space");
-        birds.up();
-    }
-}
+// function keyPressed() {
+//     if (key == ' ') {
+//         // console.log("space");
+//         birds.up();
+//     }
+// }
 

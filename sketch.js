@@ -5,7 +5,16 @@ var pipes = [];
 let counter = 0;
 let cycles = 1;
 let slider;
-
+let highscore = 0;
+let ahs = 0;
+let highscoreSpan;
+let ahSpan;
+let bg;
+let birdSprite;
+let pipebody;
+let pipetip;
+let bgX = 0;
+let parallax = 0.8;
 function keyPressed() {
     if (key === 'S') {
         let bird = birds[0];
@@ -15,17 +24,35 @@ function keyPressed() {
     }
 
 }
+function preload() {
+    bg = loadImage('design/bg.png');
+    birdSprite = loadImage('design/bird2.png');
+    //birdup = loadImage('design/birdup');
+    pipebody = loadImage('design/pipebody.png');
+    pipetip = loadImage('design/pipetip.png');
+
+}
 function setup() {
-    createCanvas(400, 600);
-    slider = createSlider(1,100,1);
+    let canvas = createCanvas(800, 600);
+    canvas.parent('canvascontainer');
+    //slider = createSlider(1,100,1);
+    slider = select('#speedSlider');
+    speedSpan = select('#speed');
     for (let i = 0; i < TOTAL; i++) {
         birds[i] = new Bird;    
     }
+    highscoreSpan = select('#hs');
+    ahSpan = select('#ahs');
 
 }
 
 function draw() {
-    for (let n = 0; n < slider.value(); n++) { //
+    background(0);
+    image(bg, bgX, 0, bg.width, height);
+
+    let cycles = slider.value();
+    speedSpan.html(cycles);
+    for (let n = 0; n < cycles; n++) { //
         
         if (counter % 75 == 0) {
             pipes.push(new Pipe());
@@ -64,13 +91,19 @@ function draw() {
         }
 
     }
-    background(0);
+
     for (let bird of birds) {
         bird.show();
     }
     for (let pipe of pipes) {
         pipe.show();
     }
+    highscore = birds[0].score;
+    if (highscore > ahs) {
+        ahs = highscore;
+    }
+    highscoreSpan.html(highscore);
+    ahSpan.html(ahs);
 }
 
 // function keyPressed() {

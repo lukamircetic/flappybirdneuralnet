@@ -2,12 +2,13 @@ class Bird {
     constructor(brain){
         this.y = height/2;
         this.x = 50;
-    
-    
+        
+        this.icon = birdSprite;
         this.gravity = 0.6;
         this.lift = -15;
         this.velocity = 0;
-
+        this.h = 0;
+        this.width = 30;
         this.score = 0;
         this.fitness = 0;
         if (brain) {
@@ -52,9 +53,10 @@ class Bird {
         this.brain.mutate(0.1);
     }
     show = function() {
-        fill(255,50);
-        stroke(255);
-        ellipse(this.x, this.y, 30, 30);
+        // fill(255,50);
+        // stroke(255);
+        // ellipse(this.x, this.y, 30, 30);
+        image(this.icon, this.x-15, this.y-15, 34, 24);
     }
     up () {
         this.velocity += this.lift;

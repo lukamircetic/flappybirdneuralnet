@@ -25,13 +25,20 @@ class Pipe {
     }
 
     show() {
-        stroke(255);
-        fill(255);
-        if (this.highlight) {
-            fill(255,0,0);
-        }
-        rect(this.x,0,this.w,this.top);
-        rect(this.x, height-this.bottom, this.w, this.bottom);
+        // stroke(255);
+        // fill(255);
+        // if (this.highlight) {
+        //     fill(255,0,0);
+        // }
+        // rect(this.x,0,this.w,this.top);
+        // rect(this.x, height-this.bottom, this.w, this.bottom);
+        push();
+        translate(this.x + this.w / 2, height-this.bottom);
+        this.drawHalf();
+        translate(0, -this.spacing);
+        rotate(PI);
+        this.drawHalf();
+        pop();
     }
     update() {
         this.x -= this.speed;
@@ -42,5 +49,17 @@ class Pipe {
         } else {
             return false;
         }
+    }
+    drawHalf() {
+        let howmany = 0;
+        let tipratio = pipetip.height / pipetip.width;
+        let bodyratio = pipebody.height / pipebody.width;
+
+        howmany = Math.round(height/ pipebody.height+10);
+        for (let i=0; i <howmany; i++) {
+            let offset = this.w / 2 * (i * bodyratio + tipratio);
+            image(pipebody, -this.w / 2, offset, this.w, this.w * bodyratio);
+        }
+        image(pipetip, -this.w / 2, 0, this.w, this.w * tipratio);
     }
 }

@@ -7,7 +7,9 @@ function nextGeneration() {
     for (let i=0; i< TOTAL; i++) {
         birds[i] = pickOne();
     }
-
+    for (let i =0; i<TOTAL; i++) {
+        savedBirds[i].dispose();
+    }
     savedBirds = [];
 
 }

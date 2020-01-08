@@ -49,6 +49,9 @@ class Bird {
 
         }
     }
+    dispose() {
+        this.brain.dispose();
+    }
     mutate() {
         this.brain.mutate(0.1);
     }

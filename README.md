@@ -13,7 +13,10 @@ neural net version - is the version in the main directory
 - you can adjust training speed with the slider and also you can see the high score and all time high score
 
 -next steps would be to add buttons to toggle things like population size, pipe height, width, spacing, etc. make it a user interface 
-
+In Development:
+- [x] Add Tensorflow.js Model
+- [ ] Add Toggle for Population Size and others
+- [ ] Add some styles to the page
 
 also i would like to implement this code onto my website 
 

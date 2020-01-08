@@ -15,11 +15,10 @@ neural net version - is the version in the main directory
 -next steps would be to add buttons to toggle things like population size, pipe height, width, spacing, etc. make it a user interface 
 In Development:
 - [x] Add Tensorflow.js Model
+- [x] Implement this code onto my website
 - [ ] Add Toggle for Population Size and others
 - [ ] Add some styles to the page
 
-
-<del> also i would like to implement this code onto my website </del>
 
 
 

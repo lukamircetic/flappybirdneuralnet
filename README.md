@@ -18,6 +18,13 @@ In Development:
 - [ ] Add Toggle for Population Size and others
 - [ ] Add some styles to the page
 
+
 also i would like to implement this code onto my website 
+
+
+Note//Disclaimer:
+The lukamircetic.github.io/flappybirdneuralnet/tensorflowflappy -- is the location of the tensorflow model, however it is running really slow online for some reason
+
+
 
 

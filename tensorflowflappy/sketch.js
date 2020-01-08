@@ -1,4 +1,4 @@
-const TOTAL = 1000;
+const TOTAL = 250;
 var birds = [];
 var savedBirds = [];
 var pipes = [];
@@ -35,6 +35,7 @@ function preload() {
 function setup() {
     let canvas = createCanvas(800, 600);
     canvas.parent('canvascontainer');
+    tf.setBackend('cpu');
     //slider = createSlider(1,100,1);
     slider = select('#speedSlider');
     speedSpan = select('#speed');
@@ -50,7 +51,7 @@ function draw() {
     background(0);
     image(bg, bgX, 0, bg.width, height);
 
-    let cycles = slider.value();
+    let cycles = slider.value()/5;
     speedSpan.html(cycles);
     for (let n = 0; n < cycles; n++) { //
         

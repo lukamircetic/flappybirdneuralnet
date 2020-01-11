@@ -62,4 +62,7 @@ class Pipe {
         }
         image(pipetip, -this.w / 2, 0, this.w, this.w * tipratio);
     }
+    pipestop() {
+        this.speed = 0;
+    }
 }

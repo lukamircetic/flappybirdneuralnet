@@ -48,7 +48,7 @@ function preload() {
     pipetip = loadImage('design/pipetip.png');
     bestbirdSprite = loadImage('design/bestbirdcolor.png');
     brainJSON = loadJSON("bird.json");
-    loadFont('design/flappy-bird.ttf');
+    loadFont('./design/flappy-bird.ttf');
 
 }
 function setup() {

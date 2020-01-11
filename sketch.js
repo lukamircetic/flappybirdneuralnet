@@ -48,6 +48,7 @@ function preload() {
     pipetip = loadImage('design/pipetip.png');
     bestbirdSprite = loadImage('design/bestbirdcolor.png');
     brainJSON = loadJSON("bird.json");
+    loadFont('design/flappy-bird.ttf');
 
 }
 function setup() {
@@ -56,14 +57,14 @@ function setup() {
     slider = select('#speedSlider');
     speedSpan = select('#speed');
     
-    userplaybutton = createButton('Play it');
+    userplaybutton = createButton('PLAY');
     userplaybutton.position(500,650);
     userplaybutton.style('padding-left', 70 + 'px');
     userplaybutton.style('padding-right', 70 + 'px');
     userplaybutton.style('padding-top', 30 + 'px');
-    userplaybutton.style('font-size', 40 + 'px');
+    userplaybutton.style('font-size', 60 + 'px');
     userplaybutton.style('padding-bottom', 30 + 'px');
-    userplaybutton.style('font-family', 'Impact');
+    userplaybutton.style('font-family', 'flappy-bird');
     userplaybutton.mousePressed(toggleState);
 
     button100 = createButton('100');
@@ -103,7 +104,7 @@ function toggleState() {
         savedBirds = [];
         pipes=[];
         bird = new Bird(null, userplay);
-        userplaybutton.html('Train');
+        userplaybutton.html('TRAIN');
     } else {
         counter = 0;
         birds=[];
@@ -111,7 +112,7 @@ function toggleState() {
         for (let i = 0; i<TOTAL;i++) {
             birds[i] = new Bird;
         }
-        userplaybutton.html('Play it');
+        userplaybutton.html('PLAY');
         nextGeneration();
     }
 }
@@ -214,8 +215,23 @@ function draw() {
             }
         }
     }
-    if (highscore > 0){
+    if (highscore >= 0){
+        fill(0);
+        textFont('flappy-bird');
+        textSize(100);
+        text(highscore, 362,80);
+        fill(255);
+        textSize(95);
+        text(highscore, 360,80),0,0;
         highscoreSpan.html(highscore);
+    } else {
+        fill(0);
+        textFont('flappy-bird');
+        textSize(100);
+        text('-', 362,80);
+        fill(255);
+        textSize(95);
+        text('-', 360,80),0,0;
     }
     
     ahSpan.html(ahs);

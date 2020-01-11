@@ -1,6 +1,3 @@
-
-
-
 function nextGeneration() {
     console.log('next-generation');
     calculateFitness();
@@ -21,7 +18,7 @@ function pickOne() {
     }
     index--;
     let bird = savedBirds[index];
-    let child = new Bird(bird.brain);
+    let child = new Bird(bird.brain,null);
     child.mutate();
     return child;
 }

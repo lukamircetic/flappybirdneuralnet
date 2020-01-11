@@ -48,7 +48,7 @@ function preload() {
     pipetip = loadImage('design/pipetip.png');
     bestbirdSprite = loadImage('design/bestbirdcolor.png');
     brainJSON = loadJSON("bird.json");
-    loadFont('./design/flappy-bird.ttf');
+    loadFont('design/flappy-bird.ttf');
 
 }
 function setup() {
@@ -206,9 +206,10 @@ function draw() {
             // }
             bird.update();
             bird.show();
+            
             // birds[0].showbest();
             if (!stopped){
-                highscore = bird.score;
+                highscore = floor(bird.score/75-5);
                 if (highscore > ahs) {
                     ahs = highscore
                 }

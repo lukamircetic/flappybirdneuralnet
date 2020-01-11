@@ -1,5 +1,6 @@
 var birds = [];
 var savedBirds = [];
+var bestbird;
 var pipes = [];
 let counter = 0;
 let cycles = 1;
@@ -19,6 +20,10 @@ let pipebody;
 let pipetip;
 let bgX = 0;
 let parallax = 0.8;
+let brainJSON;
+let userplay = false;
+let userplaybutton;
+let stopped = false;
 function keyPressed() {
     if (key === 'S') {
         let bird = birds[0];
@@ -26,6 +31,13 @@ function keyPressed() {
         saveJSON(bird.brain,'bird.json');
         console.log(json);
     }
+    if (userplay) {
+        if (key == ' ') {
+            // console.log("space");
+            bird.up();
+        }
+    }
+
 
 }
 function preload() {
@@ -34,6 +46,8 @@ function preload() {
     //birdup = loadImage('design/birdup');
     pipebody = loadImage('design/pipebody.png');
     pipetip = loadImage('design/pipetip.png');
+    bestbirdSprite = loadImage('design/bestbirdcolor.png');
+    brainJSON = loadJSON("bird.json");
 
 }
 function setup() {
@@ -42,6 +56,16 @@ function setup() {
     slider = select('#speedSlider');
     speedSpan = select('#speed');
     
+    userplaybutton = createButton('Play it');
+    userplaybutton.position(500,650);
+    userplaybutton.style('padding-left', 70 + 'px');
+    userplaybutton.style('padding-right', 70 + 'px');
+    userplaybutton.style('padding-top', 30 + 'px');
+    userplaybutton.style('font-size', 40 + 'px');
+    userplaybutton.style('padding-bottom', 30 + 'px');
+    userplaybutton.style('font-family', 'Impact');
+    userplaybutton.mousePressed(toggleState);
+
     button100 = createButton('100');
     button100.position(1000,200);
     button100.mousePressed(buttonone);
@@ -57,73 +81,160 @@ function setup() {
     button1000 = createButton('1000');
     button1000.position(1000, 350);
     button1000.mousePressed(buttonfour);
-    for (let i = 0; i < TOTAL; i++) {
+    
+    if (!userplay) {
+        for (let i = 0; i < TOTAL; i++) {
         birds[i] = new Bird;    
+        }
+    } else {
+        bird = new Bird(null,userplay);
     }
     highscoreSpan = select('#hs');
     ahSpan = select('#ahs');
-
+    // let birdBrain = NeuralNetwork.deserialize(brainJSON);
+    // bird = new Bird(birdBrain);
 }
+function toggleState() {
+    userplay = !userplay;
 
+    if (userplay) {
+        counter = 0;
+        birds=[];
+        savedBirds = [];
+        pipes=[];
+        bird = new Bird(null, userplay);
+        userplaybutton.html('Train');
+    } else {
+        counter = 0;
+        birds=[];
+        pipes=[];
+        for (let i = 0; i<TOTAL;i++) {
+            birds[i] = new Bird;
+        }
+        userplaybutton.html('Play it');
+        nextGeneration();
+    }
+}
 function draw() {
-    background(0);
+    background(255);
     image(bg, bgX, 0, bg.width, height);
+    
     let cycles = slider.value();
     speedSpan.html(cycles);
-    for (let n = 0; n < cycles; n++) { //
-        
-        if (counter % 75 == 0) {
-            pipes.push(new Pipe());
-        }
-        counter ++;
-        for(var i = pipes.length-1; i >= 0; i--) {
-            pipes[i].update();
+    stopped = false;
+    if (!userplay) {
+        for (let n = 0; n < cycles; n++) { //
+            
+            if (counter % 75 == 0) {
+                pipes.push(new Pipe());
+            }
+            counter ++;
+            for(var i = pipes.length-1; i >= 0; i--) {
+                pipes[i].update();
 
-            for (let j = birds.length-1; j>=0; j--) {
-                if (pipes[i].hits(birds[j])) {
-                    savedBirds.push(birds.splice(j,1)[0]);
+                for (let j = birds.length-1; j>=0; j--) {
+                    if (pipes[i].hits(birds[j])) {
+                        savedBirds.push(birds.splice(j,1)[0]);
+                    }
+                }
+            if (pipes[i].offscreen()) {
+                pipes.splice(i,1);
+            }
+
+            for (let i = birds.length-1; i>=0; i--) {
+                if (birds[i].offScreen()) {
+                    savedBirds.push(birds.splice(i,1)[0]);
                 }
             }
-        if (pipes[i].offscreen()) {
-            pipes.splice(i,1);
+
+
+            }
+            for (let bird of birds) {
+                bird.think(pipes);
+                bird.update();
+            }
+
+            if(birds.length === 0){
+                counter = 0;
+                nextGeneration();
+                pipes = [];
+                // pipes.push(new Pipe());
+            }
+
+        }
+        
+        for (let bird of birds) {
+            bird.show();
+            
+        }
+        for (let pipe of pipes) {
+            pipe.show();
+        }
+        highscore = floor(birds[0].score/75-5);
+        
+        if (highscore > ahs && birds[0] != null) {
+            ahs = highscore;
+            bestbird = birds[0];
         }
 
-        for (let i = birds.length-1; i>=0; i--) {
-            if (birds[i].offScreen()) {
-                savedBirds.push(birds.splice(i,1)[0]);
+        birds[0].showbest();
+    } else {
+        for (let n = 0; n < 1; n++) { //
+            
+            if (counter % 75 == 0) {
+                pipes.push(new Pipe());
+            }
+            counter ++;
+            for(var i = pipes.length-1; i >= 0; i--) {
+                pipes[i].update();
+                if (pipes[i].offscreen()) {
+                    pipes.splice(i,1);
+                }
+                pipes[i].show();
+                if (pipes[i].hits(bird)) {
+                    gamestop();
+                    
+                }
+                
+            }
+            if (bird.offScreen()) {
+                gamestop();
+            }
+            // for (let pipe of pipes) {
+            //     pipe.show();
+            // }
+            bird.update();
+            bird.show();
+            // birds[0].showbest();
+            if (!stopped){
+                highscore = bird.score;
+                if (highscore > ahs) {
+                    ahs = highscore
+                }
             }
         }
-
-
-        }
-        for (let bird of birds) {
-            bird.think(pipes);
-            bird.update();
-        }
-
-        if(birds.length === 0){
-            counter = 0;
-            nextGeneration();
-            pipes = [];
-            // pipes.push(new Pipe());
-        }
-
     }
-
-    for (let bird of birds) {
-        bird.show();
+    if (highscore > 0){
+        highscoreSpan.html(highscore);
     }
-    for (let pipe of pipes) {
-        pipe.show();
-    }
-    highscore = birds[0].score;
-    if (highscore > ahs) {
-        ahs = highscore;
-    }
-    highscoreSpan.html(highscore);
+    
     ahSpan.html(ahs);
 }
+function gamestop() {
+    bird.stop();
+    fill(0);
+    textFont('Impact');
+    textSize(60);
+    text('Game Over', 270, 200);
+    textSize(30);
+    text('Click Train to go back to training', 200,300);
+    text('Double click Train to play again', 210, 350);
+    for (let i=0; i<pipes.length;i++) {
+        pipes[i].pipestop();
+    }
+    stopped = true;
 
+}
 function buttonone() {
     TOTAL = 100;
     counter = 0;

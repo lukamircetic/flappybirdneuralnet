@@ -1,9 +1,10 @@
 class Bird {
-    constructor(brain){
+    constructor(brain, userplay){
         this.y = height/2;
         this.x = 50;
         
         this.icon = birdSprite;
+        this.besticon = bestbirdSprite;
         this.gravity = 0.6;
         this.lift = -15;
         this.velocity = 0;
@@ -13,6 +14,8 @@ class Bird {
         this.fitness = 0;
         if (brain) {
             this.brain = brain.copy();
+        } else if (userplay){
+            this.brain = null;
         } else {
         this.brain = new NeuralNetwork(5,8,2);
         }
@@ -58,6 +61,11 @@ class Bird {
         // ellipse(this.x, this.y, 30, 30);
         image(this.icon, this.x-15, this.y-15, 34, 24);
     }
+
+    showbest() {
+        image(this.besticon, this.x-15, this.y-15, 34, 24);
+    }
+    
     up () {
         this.velocity += this.lift;
     }
@@ -80,5 +88,10 @@ class Bird {
         // }
 
 
+    }
+    stop() {
+        this.velocity=0;
+        this.gravity=0;
+        
     }
 }
